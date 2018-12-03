@@ -41,6 +41,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
+
 /**
  * This class is used to expose layoutChunk method, should not be used in anywhere else
  * It's only a valid class technically and with no features/functions in it
@@ -87,7 +89,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * Based on {@link #mOrientation}, an implementation is lazily created in
      * {@link #ensureLayoutStateExpose} method.
      */
-    private OrientationHelper mOrientationHelper;
+    private OrientationHelperEx mOrientationHelper;
 
     /**
      * We need to track this so that we can ignore current position when it changes.
@@ -127,7 +129,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
     private final Method mEnsureLayoutStateMethod;
 
-    private int recycleOffset;
+    protected int recycleOffset;
 
     /**
      * Creates a vertical LinearLayoutManager
@@ -806,7 +808,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         }
 
         if (mOrientationHelper == null) {
-            mOrientationHelper = OrientationHelper.createOrientationHelper(this, getOrientation());
+            mOrientationHelper = OrientationHelperEx.createOrientationHelper(this, getOrientation());
         }
 
         try {
@@ -918,6 +920,20 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         return 0;
     }
 
+    /**
+     * adjust align offset when fill view during scrolling or get margins when layout from anchor
+     *
+     * @param position
+     * @param isLayoutEnd
+     * @return
+     */
+    protected int computeAlignOffset(int position, boolean isLayoutEnd, boolean useAnchor) {
+        return 0;
+    }
+
+    public boolean isEnableMarginOverLap() {
+        return false;
+    }
 
     /**
      * {@inheritDoc}
@@ -1139,7 +1155,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             }
             recycleByLayoutStateExpose(recycler, layoutState);
         }
-        int remainingSpace = layoutState.mAvailable + layoutState.mExtra;
+        int remainingSpace = layoutState.mAvailable + layoutState.mExtra + recycleOffset;
         while (remainingSpace > 0 && layoutState.hasMore(state)) {
             layoutChunkResultCache.resetInternal();
             layoutChunk(recycler, state, layoutState, layoutChunkResultCache);
@@ -1722,11 +1738,22 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             if (mLayoutFromEnd) {
                 mCoordinate = mOrientationHelper.getDecoratedEnd(child) + computeAlignOffset(child, mLayoutFromEnd, true) +
                         mOrientationHelper.getTotalSpaceChange();
+                if (DEBUG) {
+                    Log.d(TAG, "1 mLayoutFromEnd " + mLayoutFromEnd + " mOrientationHelper.getDecoratedEnd(child) "
+                        + mOrientationHelper.getDecoratedEnd(child) + " computeAlignOffset(child, mLayoutFromEnd, true) " + computeAlignOffset(child, mLayoutFromEnd, true));
+                }
             } else {
                 mCoordinate = mOrientationHelper.getDecoratedStart(child) + computeAlignOffset(child, mLayoutFromEnd, true);
+                if (DEBUG) {
+                    Log.d(TAG, "2 mLayoutFromEnd " + mLayoutFromEnd + " mOrientationHelper.getDecoratedStart(child) "
+                        + mOrientationHelper.getDecoratedStart(child) + " computeAlignOffset(child, mLayoutFromEnd, true) " + computeAlignOffset(child, mLayoutFromEnd, true));
+                }
             }
 
             mPosition = getPosition(child);
+            if (DEBUG) {
+                Log.d(TAG, "position " + mPosition + " mCoordinate " + mCoordinate);
+            }
         }
     }
 

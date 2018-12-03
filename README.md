@@ -2,6 +2,21 @@
 
 [中文文档](README-ch.md)
 
+## Projects of Tangram
+
+### Android
+
++ [Tangram-Android](https://github.com/alibaba/Tangram-Android)
++ [Virtualview-Android](https://github.com/alibaba/Virtualview-Android)
++ [vlayout](https://github.com/alibaba/vlayout)
++ [UltraViewPager](https://github.com/alibaba/UltraViewPager)
+
+### iOS
+
++ [Tangram-iOS](https://github.com/alibaba/Tangram-iOS)
++ [Virtualview-iOS](https://github.com/alibaba/VirtualView-iOS)
++ [LazyScrollView](https://github.com/alibaba/lazyscrollview)
+
 Project `vlayout` is a powerful LayoutManager extension for RecyclerView, it provides a group of layouts for RecyclerView. Make it able to handle a complicate situation when grid, list and other layouts in the same recyclerview.
 
 ## Design
@@ -27,11 +42,11 @@ By providing a custom LayoutManager to RecyclerView, VirtualLayout is able to la
 
 ### Import Library
 
-Please find the latest version(1.0.9 so far) in maven repository. The newest version has been upload to jcenter and MavenCentral, make sure you have added at least one of these repositories.
+Please find the latest version in [release notes](https://github.com/alibaba/vlayout/releases). The newest version has been upload to jcenter and MavenCentral, make sure you have added at least one of these repositories. As follow:
 
 For gradle:
 ``` gradle
-compile ('com.alibaba.android:vlayout:1.0.9@aar') {
+compile ('com.alibaba.android:vlayout:1.2.8@aar') {
 	transitive = true
 }
 ```
@@ -42,7 +57,7 @@ pom.xml
 <dependency>
   <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
-  <version>1.0.9</version>
+  <version>1.2.8</version>
   <type>aar</type>
 </dependency>
 ```
@@ -128,6 +143,7 @@ Add following configs in your proguard file if your app is released with proguar
 -keep class android.support.v7.widget.RecyclerView$LayoutParams { *; }
 -keep class android.support.v7.widget.RecyclerView$ViewHolder { *; }
 -keep class android.support.v7.widget.ChildHelper { *; }
+-keep class android.support.v7.widget.ChildHelper$Bucket { *; }
 -keep class android.support.v7.widget.RecyclerView$LayoutManager { *; }
 ```
 
@@ -136,6 +152,10 @@ Add following configs in your proguard file if your app is released with proguar
 ![](http://img3.tbcdn.cn/L1/461/1/1b9bfb42009047f75cee08ae741505de2c74ac0a)
 
 [Demo Project](https://github.com/alibaba/vlayout/tree/master/examples)
+
+# FAQ
+
+Read FAQ(In Chinese language only now) before submitting issue: [FAQ](docs/VLayoutFAQ.md)。
 
 # Layout Attributes
 
